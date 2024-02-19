@@ -1,8 +1,9 @@
 spring:
   profiles:
-    include:
-      - local
-      - dev
+    active: local
+    group:
+      local: logging-type-console, logging-level-local
+      dev: logging-type-file, logging-level-dev
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/board
