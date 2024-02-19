@@ -2,18 +2,18 @@ package org.example.assignment.entity
 
 import org.example.assignment.toSlug
 import java.time.LocalDateTime
-import java.util.Locale
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.ManyToOne
 
 @Entity
-class Atricle (
-    @Id @GeneratedValue var id: Long ?= null,
-    @ManyToOne var author: User,
+class Article (
     var title: String,
+    var headline: String,
     var content: String,
+    @ManyToOne var author: User,
+    var slug: String = title.toSlug(),
     var wrotedAt: LocalDateTime = LocalDateTime.now(),
-    var slug: String = title.toSlug()
+    @Id @GeneratedValue var id: Long ?= null
 )

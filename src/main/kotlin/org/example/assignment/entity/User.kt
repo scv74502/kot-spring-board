@@ -7,10 +7,11 @@ import javax.persistence.Id
 
 @Entity
 class User (
-    @Id @GeneratedValue var id:Long ?= null,
-    var userId: String,
-    var password: String,
+    var login: String,
     var userName: String,
-    var userJoinDate: Date,
-    var isDeleted: Boolean
+    var userId: String,
+//    var password: String,
+//    var userJoinDate: Date,
+//    var isDeleted: Boolean,
+    @Id @GeneratedValue var id:Long ?= null
 )
