@@ -1,16 +1,40 @@
 package org.example.assignment.member.entity
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import org.example.assignment.common.status.Gender
+import java.time.LocalDate
+import java.util.Date
+import javax.persistence.*
 
 @Entity
+
+@Table(
+    uniqueConstraints = [
+        UniqueConstraint(name = "uk_member_login_id", columnNames = ["loginId"])
+    ]
+)
 class Member (
-    var login: String,
-    var userName: String,
-    var userId: String,
-//    var password: String,
-//    var userJoinDate: Date,
-//    var isDeleted: Boolean,
-    @Id @GeneratedValue var id:Long ?= null
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    var id: Long ?= null,
+
+    @Column(nullable = false, length = 30, updatable = false)
+    val loginId: String,
+
+    @Column(nullable = false, length = 100)
+    val password: String,
+
+    @Column(nullable = false, length = 100)
+    val name: String,
+
+    @Column(nullable = false)
+    @Temporal(TemporalType.DATE)
+    val birthDate: Date,
+
+    @Column(nullable = false, length=6)
+    @Enumerated(EnumType.STRING)
+    val gender: Gender,
+
+    @Column(nullable = false, length = 50)
+    val email: String
+
 )
