@@ -14,6 +14,10 @@ allOpen {
 	annotation("javax.persistence.MappedSuperclass")
 }
 
+noArg{
+	annotation("javax.persistence.Entity")
+}
+
 group = 'org.example'
 version = '0.0.1-SNAPSHOT'
 

@@ -1,10 +1,10 @@
 package org.example.assignment.Test
 
 import org.assertj.core.api.Assertions.assertThat
-import org.example.assignment.entity.Article
-import org.example.assignment.entity.User
-import org.example.assignment.repository.ArticleRepository
-import org.example.assignment.repository.UserRepository
+import org.example.assignment.article.entity.Article
+import org.example.assignment.member.entity.Member
+import org.example.assignment.article.entity.repository.ArticleRepository
+import org.example.assignment.member.entity.repository.MemberRepository
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -14,12 +14,12 @@ import org.springframework.data.repository.findByIdOrNull
 @DataJpaTest
 class RepositoriesTests @Autowired constructor(
     val entityManager: TestEntityManager,
-    val userRepository: UserRepository,
+    val userRepository: MemberRepository,
     val articleRepository: ArticleRepository
 ) {
     @Test
     fun `When findByIdOrNull then return Article`() {
-        val johnDoe = User("johnDoe", "John Doe", "johnDoeId")
+        val johnDoe = Member("johnDoe", "John Doe", "johnDoeId")
         entityManager.persist(johnDoe)
         val article = Article("Lorem", "Lorem", "dolor sit amet", johnDoe)
         entityManager.persist(article)
@@ -30,7 +30,7 @@ class RepositoriesTests @Autowired constructor(
 
     @Test
     fun `When findByLogin then return User`() {
-        val johnDoe = User("johnDoe", "John", "Doe")
+        val johnDoe = Member("johnDoe", "John", "Doe")
         entityManager.persist(johnDoe)
         entityManager.flush()
         val user = userRepository.findByLogin(johnDoe.login)

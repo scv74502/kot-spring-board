@@ -1,3 +1,8 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
 spring:
   profiles:
     active: local
@@ -13,14 +18,17 @@ spring:
   jpa:
     properties:
       hibernate:
-        ddl-auto: update
+        ddl-auto: update  # Apply schema chang on real database, not for production level database
         format_sql: true #To beautify or pretty print the SQL
         show_sql: true #show sql
     hibernate:
       ddl-auto: update
     show_sql: true
+    open-in-view: true
 
 logging:
+  pattern:
+    console: "[%d{HH:mm:ss.SSS}][%-5level][%logger.%method:line%line] - %msg%n" # form of printing log
   level:
     org.hibernate:
       type.descriptor.sql: trace #show parameter binding

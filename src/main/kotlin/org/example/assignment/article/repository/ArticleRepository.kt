@@ -1,6 +1,6 @@
-package org.example.assignment.repository
+package org.example.assignment.article.repository
 
-import org.example.assignment.entity.Article
+import org.example.assignment.article.entity.Article
 import org.springframework.data.repository.CrudRepository
 
 interface ArticleRepository: CrudRepository<Article, Long> {

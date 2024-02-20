@@ -1,12 +1,11 @@
-package org.example.assignment.entity
+package org.example.assignment.member.entity
 
-import java.util.Date
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 
 @Entity
-class User (
+class Member (
     var login: String,
     var userName: String,
     var userId: String,
