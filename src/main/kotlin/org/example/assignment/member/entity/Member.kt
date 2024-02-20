@@ -27,8 +27,8 @@ class Member (
     val name: String,
 
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    val birthDate: Date,
+//    @Temporal(TemporalType.DATE)
+    val birthDate: LocalDate,
 
     @Column(nullable = false, length=6)
     @Enumerated(EnumType.STRING)
