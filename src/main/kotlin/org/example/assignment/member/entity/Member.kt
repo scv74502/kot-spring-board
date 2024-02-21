@@ -1,41 +1,30 @@
 package org.example.assignment.member.entity
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.example.assignment.common.status.Gender
+import org.example.assignment.member.dto.SignUpRequest
+import org.example.assignment.member.dto.UpdateRequest
 import org.hibernate.annotations.CreationTimestamp
-import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.userdetails.User
-import org.springframework.security.core.userdetails.UserDetails
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.stream.Collectors
 import javax.persistence.*
-import kotlin.jvm.Transient
 
 @Entity
-
-@Table(
-    uniqueConstraints = [
-        UniqueConstraint(name = "uk_member_login_id", columnNames = ["loginId"])
-    ]
-)
 class Member (
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "member_id")
     val id: Long ?= null,
 
-    @Column(nullable = false, length = 30, updatable = false, name = "login_id")
+    @Column(nullable = false, length = 30, updatable = false, name = "login_id", unique = true)
     val loginId: String,
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     var password: String,
 
     @Column(nullable = false, length = 100)
-    val name: String,
+    var name: String,
 
     @Column(nullable = false)
-//    @Temporal(TemporalType.DATE)
     val birthDate: LocalDate,
 
     @CreationTimestamp
@@ -49,19 +38,22 @@ class Member (
     var email: String,
 
     @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Transient
-    var roles: MutableSet<MemberRole>
+    var role: MemberRole = MemberRole.USER
 
-//    @Enumerated(EnumType.STRING)
-//    var role: MemberRole
     ) {
-
-
-    fun getAuthorities(): User{
-        return User(this.loginId, this.password, this.roles.stream().map {
-            role -> SimpleGrantedAuthority("ROLE_$role")
-        }.collect(Collectors.toSet()))
+    companion object {
+        fun from(request: SignUpRequest) = Member(
+                loginId = request.loginId,
+                password = request.password,
+                name = request.name,
+                birthDate = request.birthDate,
+                gender = request.gender,
+                email = request.email
+        )
+    }
+    fun update(newMember: UpdateRequest) {
+        this.password = newMember.newPassword?.takeIf { it.isNotBlank() } ?: this.password
+        this.name = newMember.name!!
     }
 }
 
