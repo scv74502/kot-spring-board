@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import org.example.assignment.common.annotation.ValidEnum
 import org.example.assignment.common.status.Gender
 import org.example.assignment.member.entity.Member
+import org.example.assignment.member.role.MemberRole
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Pattern
@@ -37,6 +38,9 @@ data class MemberSignUpRequestDto(
     private val _birthDate: String?,
 
     @field:NotBlank
+    private val _createdAt: LocalDateTime,
+
+    @field:NotBlank
     @field:ValidEnum(enumClass = Gender::class,
         message = "MAN 이나 WOMAN 중 하나를 선택해주세요")
     @JsonProperty("gender")
@@ -46,6 +50,7 @@ data class MemberSignUpRequestDto(
     @field:Email
     @JsonProperty("email")
     private val _email: String?
+
 ) {
     val loginId: String
         get() = _loginId!!
@@ -59,6 +64,9 @@ data class MemberSignUpRequestDto(
     val birthDate: LocalDate
         get() = _birthDate!!.toLocalDate()
 
+    val createdAt: LocalDateTime
+        get() = createdAt!!
+
     val gender: Gender
         get() = Gender.valueOf(_gender!!)
 
@@ -69,6 +77,6 @@ data class MemberSignUpRequestDto(
         LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
 
-    fun toEntity(): Member =
-        Member(id, loginId, password, name, birthDate, gender, email)
+//    fun toEntity(): Member =
+//        Member(id, loginId, password, name, birthDate, createdAt, gender, email)
 }

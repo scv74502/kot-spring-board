@@ -1,24 +1,40 @@
 package org.example.assignment.common.config
 
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
+import org.example.assignment.member.service.MemberService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.crypto.password.PasswordEncoder
 
-@Configuration
-class SecurityConfig {
-    private val allowedUrls = arrayOf("/", "/api/**")
+@EnableWebSecurity
+class SecurityConfig (
+    @Autowired
+    private val memberService: MemberService,
 
-    @Bean
-    fun filterChain(http: HttpSecurity) = http
-        .cors().and()
-        .httpBasic().disable()
-        .csrf().disable()
-        .headers { it.frameOptions().sameOrigin() }
-        .authorizeRequests {
-            it.antMatchers("/api/**").permitAll()	// 허용할 url 목록을 배열로 분리했다
-           .anyRequest().authenticated()
-        }
-        .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-        .build()!!
+    @Autowired
+    private val passwordEncoder: PasswordEncoder
+): WebSecurityConfigurerAdapter() {
+
+    companion object {
+        const val LOGIN_SUCCESS_URL: String = "api/login/success"
+    }
+
+    override fun configure(auth: AuthenticationManagerBuilder) {
+        auth
+            .userDetailsService(memberService)
+            .passwordEncoder(passwordEncoder)
+    }
+
+    override fun configure(http: HttpSecurity?) {
+        http
+            ?.csrf()?.disable()
+            ?.authorizeRequests{
+                it.antMatchers("/", "api/**").permitAll()
+            }
+            ?.sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            ?.build()!!
+    }
 }

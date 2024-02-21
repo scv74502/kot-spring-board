@@ -1,0 +1,5 @@
+jwt:
+  # HS512 secret key, hs256 key length longer than 32, hs512 key len longer than 64
+  secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zDGJNjdsfnjosdfnSDAOufnINbhgffghLiuUJD9348ZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
+  exp-hours: 3
+  issuer: kwp # token provider

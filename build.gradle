@@ -46,10 +46,10 @@ dependencies {
 	implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
 	// JWT 사용시 필요
-	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
-	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.5'
-	compileOnly 'org.projectlombok:lombok'
+	implementation 'org.projectlombok:lombok'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.5'
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.12.5'
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
@@ -67,6 +67,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.konghq/unirest-java
 	implementation group: 'com.konghq', name: 'unirest-java', version: '4.0.0-RC2'
 }
+
+apply plugin: "kotlin-jpa"
 
 tasks.withType(KotlinCompile) {
 	kotlinOptions {

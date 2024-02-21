@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import java.security.SignatureException
 
 @RestControllerAdvice
 class CustomExceptionHandler {
@@ -41,6 +42,18 @@ class CustomExceptionHandler {
             ResultCode.ERROR.msg
         ), HttpStatus.BAD_REQUEST)
     }
+
+    @ExceptionHandler(SignatureException::class)
+    fun handleSignatureException() =
+        ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 유효하지 않습니다.")
+
+//    @ExceptionHandler(MalformedJwtException::class)
+//    fun handleMalformedJwtException() =
+//        ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("올바르지 않은 토큰입니다.")
+//
+//    @ExceptionHandler(ExpiredJwtException::class)
+//    fun handleExpiredJwtException() =
+//        ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다. 다시 로그인해주세요.")
 
     // 그 외의 모든 일반적인 에러를 처리한다
     @ExceptionHandler(Exception::class)

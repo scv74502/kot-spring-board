@@ -1,9 +1,16 @@
 package org.example.assignment.member.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.example.assignment.common.status.Gender
+import org.hibernate.annotations.CreationTimestamp
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.User
+import org.springframework.security.core.userdetails.UserDetails
 import java.time.LocalDate
-import java.util.Date
+import java.time.LocalDateTime
+import java.util.stream.Collectors
 import javax.persistence.*
+import kotlin.jvm.Transient
 
 @Entity
 
@@ -15,13 +22,14 @@ import javax.persistence.*
 class Member (
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long ?= null,
+    @Column(name = "member_id")
+    val id: Long ?= null,
 
-    @Column(nullable = false, length = 30, updatable = false)
+    @Column(nullable = false, length = 30, updatable = false, name = "login_id")
     val loginId: String,
 
     @Column(nullable = false, length = 100)
-    val password: String,
+    var password: String,
 
     @Column(nullable = false, length = 100)
     val name: String,
@@ -30,11 +38,33 @@ class Member (
 //    @Temporal(TemporalType.DATE)
     val birthDate: LocalDate,
 
+    @CreationTimestamp
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+
     @Column(nullable = false, length=6)
     @Enumerated(EnumType.STRING)
-    val gender: Gender,
+    var gender: Gender,
 
     @Column(nullable = false, length = 50)
-    val email: String
+    var email: String,
 
-)
+//    @Enumerated(EnumType.STRING)
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @Transient
+//    var roles: MutableSet<MemberRole>
+
+    @Enumerated(EnumType.STRING)
+    var role: MemberRole
+    ) {
+
+
+//    fun getAuthorities(): User{
+//        return User(this.loginId, this.password, this.roles.stream().map {
+//            role -> SimpleGrantedAuthority("ROLE_$role")
+//        }.collect(Collectors.toSet()))
+//    }
+}
+
+enum class MemberRole {
+    ADMIN, USER
+}
