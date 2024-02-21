@@ -48,21 +48,21 @@ class Member (
     @Column(nullable = false, length = 50)
     var email: String,
 
-//    @Enumerated(EnumType.STRING)
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    @Transient
-//    var roles: MutableSet<MemberRole>
-
     @Enumerated(EnumType.STRING)
-    var role: MemberRole
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Transient
+    var roles: MutableSet<MemberRole>
+
+//    @Enumerated(EnumType.STRING)
+//    var role: MemberRole
     ) {
 
 
-//    fun getAuthorities(): User{
-//        return User(this.loginId, this.password, this.roles.stream().map {
-//            role -> SimpleGrantedAuthority("ROLE_$role")
-//        }.collect(Collectors.toSet()))
-//    }
+    fun getAuthorities(): User{
+        return User(this.loginId, this.password, this.roles.stream().map {
+            role -> SimpleGrantedAuthority("ROLE_$role")
+        }.collect(Collectors.toSet()))
+    }
 }
 
 enum class MemberRole {

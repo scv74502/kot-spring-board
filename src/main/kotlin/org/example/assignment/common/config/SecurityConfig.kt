@@ -1,40 +1,27 @@
 package org.example.assignment.common.config
 
-import org.example.assignment.member.service.MemberService
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.SecurityFilterChain
 
-@EnableWebSecurity
-class SecurityConfig (
-    @Autowired
-    private val memberService: MemberService,
+@Configuration
+class SecurityConfig {
+    private val allowedUrls = arrayOf("/", "/swagger-ui/**", "/v3/**", "/sign-up", "/sign-in")	// sign-up, sign-in 추가
 
-    @Autowired
-    private val passwordEncoder: PasswordEncoder
-): WebSecurityConfigurerAdapter() {
 
-    companion object {
-        const val LOGIN_SUCCESS_URL: String = "api/login/success"
+    @Override
+    protected fun filterChain(http: HttpSecurity):SecurityFilterChain {
+        return http
+                .csrf().disable()
+                .headers { it.frameOptions().sameOrigin() }
+                .authorizeRequests {
+                    it.antMatchers(*allowedUrls).permitAll()    // 허용할 url 목록을 배열로 분리했다
+                            .anyRequest().authenticated()
+                }
+                .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+                .build()!!
     }
 
-    override fun configure(auth: AuthenticationManagerBuilder) {
-        auth
-            .userDetailsService(memberService)
-            .passwordEncoder(passwordEncoder)
-    }
-
-    override fun configure(http: HttpSecurity?) {
-        http
-            ?.csrf()?.disable()
-            ?.authorizeRequests{
-                it.antMatchers("/", "api/**").permitAll()
-            }
-            ?.sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-            ?.build()!!
-    }
 }
