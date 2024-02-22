@@ -1,9 +1,10 @@
 package org.example.assignment.member.entity
 
 import org.example.assignment.common.status.Gender
+import org.example.assignment.member.dto.MemberUpdateRequest
 import org.example.assignment.member.dto.SignUpRequest
-import org.example.assignment.member.dto.UpdateRequest
 import org.hibernate.annotations.CreationTimestamp
+import org.springframework.security.crypto.password.PasswordEncoder
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -22,7 +23,7 @@ class Member (
     var password: String,
 
     @Column(nullable = false, length = 100)
-    var name: String,
+    var name: String? = null,
 
     @Column(nullable = false)
     val birthDate: LocalDate,
@@ -51,9 +52,13 @@ class Member (
                 email = request.email
         )
     }
-    fun update(newMember: UpdateRequest) {
-        this.password = newMember.newPassword?.takeIf { it.isNotBlank() } ?: this.password
-        this.name = newMember.name!!
+    fun update(newMember: MemberUpdateRequest, encoder: PasswordEncoder) {
+        this.password = newMember.newPassword
+            .takeIf { it.isNotBlank() }
+            ?.let { encoder.encode(it) }
+            ?: this.password
+        this.name = newMember.name
+        this.email = newMember.email
     }
 }
 

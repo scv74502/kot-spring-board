@@ -31,7 +31,7 @@ class MemberRefreshToken (
         this.refreshToken ==refreshToken
 
     // 재발급 요청 횟수 증가시키기
-    fun addReissueCount() {
+    fun increaseReissueCount() {
         reissueCount++
     }
 }
