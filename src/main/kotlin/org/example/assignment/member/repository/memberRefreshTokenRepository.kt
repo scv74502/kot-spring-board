@@ -1,6 +1,6 @@
-package org.example.assignment.common.authority
+package org.example.assignment.member.repository
 
-import org.example.assignment.common.authority.entity.MemberRefreshToken
+import org.example.assignment.member.entity.MemberRefreshToken
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface memberRefreshTokenRepository: JpaRepository<MemberRefreshToken, Long> {

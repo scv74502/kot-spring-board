@@ -1,4 +1,4 @@
-package org.example.assignment.common.authority.entity
+package org.example.assignment.member.entity
 
 import org.example.assignment.member.entity.Member
 import javax.persistence.Entity

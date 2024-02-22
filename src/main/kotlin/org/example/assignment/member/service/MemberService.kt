@@ -1,23 +1,16 @@
 package org.example.assignment.member.service
 
-import org.example.assignment.common.exception.InvalidInputException
-import org.example.assignment.member.entity.Member
-import org.example.assignment.member.entity.MemberRole
+
 import org.example.assignment.member.repository.MemberRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 import javax.transaction.Transactional
 
 @Transactional
 @Service
 class MemberService(
     @Autowired
-    private val memberRepository: MemberRepository,
-
-    @Autowired
-    private val passwordEncoder: PasswordEncoder
+    private val memberRepository: MemberRepository
 )
 //    : UserDetailsService
 {
@@ -26,7 +19,7 @@ class MemberService(
 //        // id duplicate check
 //        var member: Member? = memberRepository.findByLoginId(memberSignUpRequest.loginId)
 //        if(member != null){
-//            throw InvalidInputException("loginId", "이미 등록된 Id 입니다.")
+//            throw InvalidInputException("loginId", "이미 등록된 id 입니다.")
 //        }
 //
 //        member = Member(
