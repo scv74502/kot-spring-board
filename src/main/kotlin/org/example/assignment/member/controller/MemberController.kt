@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.User
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
@@ -22,10 +23,11 @@ class MemberController (
     @Operation(summary = "회원의 자기 자신 정보 조회하기")
     @GetMapping
     fun getMemberInfo(@AuthenticationPrincipal user: User) =
-        ApiResponse.success(memberService.getMemberInfo(user.username))
+        ApiResponse.success(memberService.getMemberInfo(user.username.toLong()))
 
     @Operation(summary = "회원의 삭제하기")
     @DeleteMapping
+    @Transactional
     fun deleteMember(@AuthenticationPrincipal user: User) =
         ApiResponse.success(memberService.deleteMember(user.username.toLong()))
 
