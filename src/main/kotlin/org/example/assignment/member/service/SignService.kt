@@ -15,8 +15,8 @@ class SignService (
     private val encode: PasswordEncoder
 ) {
     @Transactional
-    fun regist(request: SignUpRequest) = SignUpResponse.from(
-
+    fun registMember(request: SignUpRequest) = SignUpResponse.from(
+        memberRepository.flushOrThrow
     )
 
 }
