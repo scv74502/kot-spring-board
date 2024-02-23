@@ -39,11 +39,11 @@ class TokenProvider (
     private val objectMapper = ObjectMapper()
 
     fun createAccessToken(userSpecification: String) = Jwts.builder()
-            .signWith(SecretKeySpec(secretKey.toByteArray(), SignatureAlgorithm.HS512.jcaName))
             .setSubject(userSpecification)
             .setIssuer(issuer)
             .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
             .setExpiration(Date.from(Instant.now().plus(expirationMinutes, ChronoUnit.MINUTES)))
+            .signWith(SecretKeySpec(secretKey.toByteArray(), SignatureAlgorithm.HS512.jcaName))
             .compact()!!
 
     fun createRefreshToken() = Jwts.builder()
@@ -52,10 +52,6 @@ class TokenProvider (
             .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
             .setExpiration(Date.from(Instant.now().plus(refreshExpirationHours, ChronoUnit.HOURS)))
             .compact()!!
-
-    fun validateTokenAndGetSubject(token: String?): String ?= validateAndParseToken(token)
-            .body
-            .subject
 
     @Transactional
     fun recreateAccessToken(refreshToken: String, oldAccessToken: String): String {
@@ -84,4 +80,13 @@ class TokenProvider (
                     Base64.getUrlDecoder().decode(oldAccessToken.split('.')[1]).decodeToString(),
                     Map::class.java
             )["sub"].toString()
+
+    // 비밀 키를 토대로 토큰의 subject(userSpecification)를 복호화하여 문자열 형태로 변환, 토큰의 사용자 정보 반환함
+    // JwtAuthenticationFilter에서 관련 필터 코드를 작성할 것
+    fun validateTokenAndGetSubject(token: String): String? = Jwts.parserBuilder()
+        .setSigningKey(secretKey.toByteArray())
+        .build()
+        .parseClaimsJws(token)
+        .body
+        .subject
 }

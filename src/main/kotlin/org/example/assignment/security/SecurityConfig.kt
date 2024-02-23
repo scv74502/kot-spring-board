@@ -1,7 +1,10 @@
 package org.example.assignment.security
 
+import lombok.RequiredArgsConstructor
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
@@ -12,6 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 @EnableWebSecurity
+@RequiredArgsConstructor
+@Configuration
 class SecurityConfig(
         private val jwtAuthenticationFilter: JwtAuthenticationFilter,
         private val entryPoint: AuthenticationEntryPoint
@@ -40,12 +45,13 @@ class SecurityConfig(
         http.
             httpBasic().disable()
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy((SessionCreationPolicy.STATELESS))
-                .and()
-                .authorizeRequests()
-                .antMatchers("/api/**").authenticated()
-                .antMatchers("/register/**", "/login/**", "/logout/**", "/swagger-ui/**").permitAll() // 로그인, 회원가입은 누구나 접근 가능
-                .and()
+                .headers { it.frameOptions().sameOrigin() }
+                .authorizeRequests {
+                    it.antMatchers("/sign-in/**", "/sign-up/**", "/sign-out/**", "/swagger-ui/**", "/")
+                    .permitAll() // 로그인, 회원가입, 로그아웃, 스웨거는은 누구나 접근 가능
+                    .anyRequest().authenticated()
+                }
+                .sessionManagement{ it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
     }
 }

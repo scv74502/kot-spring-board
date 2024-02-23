@@ -13,7 +13,6 @@ import org.springframework.web.filter.OncePerRequestFilter
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import kotlin.math.exp
 
 @Order(0)
 @Component
@@ -34,9 +33,6 @@ class JwtAuthenticationFilter (private val tokenProvider: TokenProvider) : OnceP
         filterChain.doFilter(request, response)
     }
 
-    private fun parseBearerToken(request: HttpServletRequest, headerName: String) = request.getHeader(headerName)
-            .takeIf { it.startsWith("Bearer", true) ?: false }?.substring((7))
-
     private fun reissueAccessToken(request: HttpServletRequest, response: HttpServletResponse, exception: ExpiredJwtException) {
         try {
             val refreshToken = parseBearerToken(request, "Refresh-Token") ?: throw exception
@@ -53,10 +49,15 @@ class JwtAuthenticationFilter (private val tokenProvider: TokenProvider) : OnceP
         }
 
     }
+
+    // 접두어가 Bearer인지 확인하고, 접두사 이후의 글자들 파싱
+    private fun parseBearerToken(request: HttpServletRequest, headerName: String) = request.getHeader(headerName)
+        .takeIf { it.startsWith("Bearer", true) ?: false }?.substring(7)
+
     private fun parseUserSpecification(token: String?) = (
             token?.takeIf { it.length >= 10 }
-                    ?.let{ tokenProvider.validateTokenAndGetSubject(it) }
-                    ?: "anonymous : anonymous"
+                ?.let { tokenProvider.validateTokenAndGetSubject(it) }
+                ?: "anonymous:anonymous"
             ).split(":")
-            .let { User(it[0], "", listOf(SimpleGrantedAuthority(it[1]))) }
+        .let { User(it[0], "", listOf(SimpleGrantedAuthority(it[1]))) }
 }
