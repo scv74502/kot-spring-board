@@ -4,6 +4,7 @@ import org.example.assignment.common.status.Gender
 import org.example.assignment.member.dto.MemberUpdateRequest
 import org.example.assignment.member.dto.SignUpRequest
 import org.hibernate.annotations.CreationTimestamp
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -11,12 +12,7 @@ import javax.persistence.*
 
 @Entity
 class Member (
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "member_id")
-    val id: Long ?= null,
-
-    @Column(nullable = false, length = 30, updatable = false, name = "login_id", unique = true)
+    @Column(nullable = false, length = 30, updatable = false, unique = true)
     val loginId: String,
 
     @Column(nullable = false)
@@ -25,11 +21,8 @@ class Member (
     @Column(nullable = false, length = 100)
     var name: String? = null,
 
-    @Column(nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     val birthDate: LocalDate,
-
-    @CreationTimestamp
-    val createdAt: LocalDateTime = LocalDateTime.now(),
 
     @Column(nullable = false, length=6)
     @Enumerated(EnumType.STRING)
@@ -42,10 +35,15 @@ class Member (
     var role: MemberRole = MemberRole.USER
 
     ) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    val id: Long ?= null
+
+    val createdAt: LocalDateTime = LocalDateTime.now()
     companion object {
-        fun from(request: SignUpRequest) = Member(
+        fun from(request: SignUpRequest, encoder: PasswordEncoder) = Member(
                 loginId = request.loginId,
-                password = request.password,
+                password = encoder.encode(request.password),
                 name = request.name,
                 birthDate = request.birthDate,
                 gender = request.gender,

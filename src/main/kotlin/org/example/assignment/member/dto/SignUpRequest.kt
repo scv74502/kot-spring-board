@@ -2,6 +2,7 @@ package org.example.assignment.member.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
 import org.example.assignment.common.status.Gender
+import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDate
 
 data class SignUpRequest(
@@ -18,6 +19,7 @@ data class SignUpRequest(
         val email: String,
 
         @Schema(description = "회원 생년월일", example = "2024.02.19")
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
         val birthDate: LocalDate,
 
         @Schema(description = "회원 성별", example = "FEMALE")
