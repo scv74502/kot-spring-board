@@ -25,16 +25,24 @@ spring:
     show_sql: true #show sql
     open-in-view: true
 
+#logging:
+#  pattern:
+#    console: "[%d{HH:mm:ss.SSS}][%-5level][%logger.%method:line%line] - %msg%n" # form of printing log
+#  level:
+#    org.hibernate:
+#      type.descriptor.sql: trace #show parameter binding
+#      SQL: DEBUG
+#    root: error
+#    xyz:
+#      quite: trace
 logging:
-  pattern:
-    console: "[%d{HH:mm:ss.SSS}][%-5level][%logger.%method:line%line] - %msg%n" # form of printing log
   level:
-    org.hibernate:
-      type.descriptor.sql: trace #show parameter binding
-      SQL: DEBUG
-    root: error
-    xyz:
-      quite: trace
+    com:
+      azurealstn:
+        codespringweb:
+          mapper: TRACE
+    root: info
+
 
 swagger:
   project:

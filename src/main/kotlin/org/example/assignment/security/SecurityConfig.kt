@@ -47,7 +47,7 @@ class SecurityConfig(
                 .csrf().disable()
                 .headers { it.frameOptions().sameOrigin() }
                 .authorizeRequests {
-                    it.antMatchers("/sign-in/**", "/sign-up/**", "/sign-out/**", "/swagger-ui/**", "/")
+                    it.antMatchers("/log-test", "/sign-in/**", "/sign-up/**", "/sign-out/**", "/swagger-ui/**", "/")
                     .permitAll() // 로그인, 회원가입, 로그아웃, 스웨거는은 누구나 접근 가능
                     .anyRequest().authenticated()
                 }

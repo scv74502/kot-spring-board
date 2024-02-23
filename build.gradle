@@ -49,7 +49,6 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-kotlin
 	implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.10.1'
-//	implementation 'org.jetbrains.kotlin:kotlin-reflect'
 	// https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect
 	runtimeOnly group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.1.61'
 	// JWT 사용시 필요
