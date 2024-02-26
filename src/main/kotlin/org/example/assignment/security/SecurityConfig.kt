@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -47,11 +48,20 @@ class SecurityConfig(
                 .csrf().disable()
                 .headers { it.frameOptions().sameOrigin() }
                 .authorizeRequests {
-                    it.antMatchers("/log-test", "/sign-in/**", "/sign-up/**", "/sign-out/**", "/swagger-ui/**", "/")
+                    it.antMatchers("/api/**", "/sign/**", "/sign-up/**", "/sign-out/**", "/swagger-ui/**", "/")
                     .permitAll() // 로그인, 회원가입, 로그아웃, 스웨거는은 누구나 접근 가능
+                    .antMatchers("/swagger-resources/**")
+                    .permitAll() // swagger
                     .anyRequest().authenticated()
                 }
                 .sessionManagement{ it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+    }
+
+    override fun configure(web: WebSecurity) {
+        web.ignoring().antMatchers("**/swagger-resources/**",
+            "/swagger-ui.html",
+            "/v2/api-docs",
+            "/webjars/**")
     }
 }

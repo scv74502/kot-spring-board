@@ -16,9 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@Tag(name = "회원 가입 및 로그인 API")
 @RestController
-@RequestMapping
+@RequestMapping("/api/sign")
 class SignInController(
   private val singService: SignService
 ) {

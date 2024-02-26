@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
-@Tag(name = "로그인 후 사용 가능한 메소드들")
 @RequestMapping("/api/member")
 @PreAuthorize("hasAuthority('USER')")
 @RestController
