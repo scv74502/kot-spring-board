@@ -24,6 +24,8 @@ spring:
       format_sql: true #To beautify or pretty print the SQL
     show_sql: true #show sql
     open-in-view: true
+    generate-ddl: true  # ddl generate
+    database-platform: org.hibernate.dialect.MariaDBDialect
 
 #logging:
 #  pattern:

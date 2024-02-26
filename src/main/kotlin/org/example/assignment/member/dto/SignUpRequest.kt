@@ -1,5 +1,6 @@
 package org.example.assignment.member.dto
 
+import io.swagger.annotations.ApiModelProperty
 import io.swagger.v3.oas.annotations.media.Schema
 import org.example.assignment.common.status.Gender
 import org.springframework.format.annotation.DateTimeFormat
@@ -7,6 +8,7 @@ import java.time.LocalDate
 
 data class SignUpRequest(
         @Schema(description = "회원 아이디", example = "colabear754")
+        @ApiModelProperty(value = "로그인 회원 아이디")
         val loginId: String,
 
         @Schema(description = "회원 비밀번호", example = "1234")
@@ -33,7 +35,7 @@ data class SignInRequest(
         val password: String
 )
 
-data class MemberUpdateRequest(
+data class UpdateRequest(
         @Schema(description = "회원 이름", example = "콜라곰")
         val name: String,
 

@@ -1,17 +1,14 @@
 package org.example.assignment.member.controller
 
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.tags.Tag
 import org.example.assignment.common.dto.ApiResponse
-import org.example.assignment.member.dto.MemberUpdateRequest
+import org.example.assignment.member.dto.UpdateRequest
 import org.example.assignment.member.service.MemberService
-import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.User
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
-import javax.validation.Valid
 
 @RequestMapping("/api/member")
 @PreAuthorize("hasAuthority('USER')")
@@ -32,6 +29,6 @@ class MemberController (
 
     @Operation(summary = "회원의 자기 정보 수정하기")
     @PutMapping
-    fun updateMember(@AuthenticationPrincipal user: User, @RequestBody request: MemberUpdateRequest) =
+    fun updateMember(@AuthenticationPrincipal user: User, @RequestBody request: UpdateRequest) =
         ApiResponse.success(memberService.updateMember(user.username.toLong(), request))
 }

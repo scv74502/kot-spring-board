@@ -3,7 +3,7 @@ package org.example.assignment.member.service
 
 import org.example.assignment.member.dto.MemberDeleteResponse
 import org.example.assignment.member.dto.MemberInfoResponse
-import org.example.assignment.member.dto.MemberUpdateRequest
+import org.example.assignment.member.dto.UpdateRequest
 import org.example.assignment.member.dto.MemberUpdateResponse
 import org.example.assignment.member.entity.Member
 import org.example.assignment.member.repository.MemberRefreshTokenRepository
@@ -35,7 +35,7 @@ class MemberService(
     }
 
     @Transactional
-    fun updateMember(id: Long, request: MemberUpdateRequest): MemberUpdateResponse {
+    fun updateMember(id: Long, request: UpdateRequest): MemberUpdateResponse {
         val member = memberRepository.findByIdOrNull(id)
             ?.takeIf { encoder.matches(request.password, it.password) }
             ?: throw IllegalArgumentException("아이디 혹은 비밀번호가 일치하지 않습니다.")

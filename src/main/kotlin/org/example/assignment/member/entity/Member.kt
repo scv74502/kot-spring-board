@@ -1,16 +1,19 @@
 package org.example.assignment.member.entity
 
+import org.example.assignment.article.entity.Article
+import org.example.assignment.comment.entity.Comment
 import org.example.assignment.common.status.Gender
-import org.example.assignment.member.dto.MemberUpdateRequest
+import org.example.assignment.member.dto.UpdateRequest
 import org.example.assignment.member.dto.SignUpRequest
-import org.hibernate.annotations.CreationTimestamp
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.persistence.*
 
+
 @Entity
+@Table(name = "member")
 class Member (
     @Column(nullable = false, length = 30, updatable = false, unique = true)
     val loginId: String,
@@ -20,6 +23,8 @@ class Member (
 
     @Column(nullable = false, length = 100)
     var name: String? = null,
+
+    val createdAt: LocalDateTime,
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     val birthDate: LocalDate,
@@ -32,14 +37,20 @@ class Member (
     var email: String,
 
     @Enumerated(EnumType.STRING)
-    var role: MemberRole = MemberRole.USER
+    var role: MemberRole = MemberRole.USER,
 
-    ) {
+    @OneToMany(mappedBy = "member")
+    val wroteArticles: MutableList<Article> = ArrayList<Article>(), // 사용자가 작성한 게시글 모음
+
+    @OneToMany(mappedBy = "member")
+    val wroteComments: MutableList<Comment> = ArrayList<Comment>()  // 사용자가 작성한 댓글들 모음
+
+) {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
     val id: Long ?= null
 
-    val createdAt: LocalDateTime = LocalDateTime.now()
     companion object {
         fun from(request: SignUpRequest, encoder: PasswordEncoder) = Member(
                 loginId = request.loginId,
@@ -47,10 +58,12 @@ class Member (
                 name = request.name,
                 birthDate = request.birthDate,
                 gender = request.gender,
-                email = request.email
+                email = request.email,
+                createdAt = LocalDateTime.now()
+//                wroteArticles = ArrayList()
         )
     }
-    fun update(newMember: MemberUpdateRequest, encoder: PasswordEncoder) {
+    fun update(newMember: UpdateRequest, encoder: PasswordEncoder) {
         this.password = newMember.newPassword
             .takeIf { it.isNotBlank() }
             ?.let { encoder.encode(it) }
