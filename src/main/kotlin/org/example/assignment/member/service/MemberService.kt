@@ -1,10 +1,10 @@
 package org.example.assignment.member.service
 
 
-import org.example.assignment.member.dto.MemberDeleteResponse
-import org.example.assignment.member.dto.MemberInfoResponse
-import org.example.assignment.member.dto.UpdateRequest
-import org.example.assignment.member.dto.MemberUpdateResponse
+import org.example.assignment.member.dto.MemberDeleteResponseDto
+import org.example.assignment.member.dto.MemberInfoResponseDto
+import org.example.assignment.member.dto.MemberUpdateRequest
+import org.example.assignment.member.dto.MemberUpdateResponseDto
 import org.example.assignment.member.entity.Member
 import org.example.assignment.member.repository.MemberRefreshTokenRepository
 import org.example.assignment.member.repository.MemberRepository
@@ -20,26 +20,27 @@ class MemberService(
     private val encoder: PasswordEncoder
 ) {
     @Transactional(readOnly = true)
-    fun getMemberInfo(id: Long): MemberInfoResponse {
-        println("------------------${id}---------------------------")
+    fun getMemberInfo(id: Long): MemberInfoResponseDto {
+//        println("------------------${id}---------------------------")
         val result: Member = memberRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("존재하지 않는 회원입니다")
-        return MemberInfoResponse.from(result)
+        return MemberInfoResponseDto.from(result)
     }
 
     @Transactional
-    fun deleteMember(id: Long): MemberDeleteResponse {
+    fun deleteMember(id: Long): MemberDeleteResponseDto {
         memberRefreshTokenRepository.deleteById(id)
-        if (!memberRepository.existsById(id)) return MemberDeleteResponse(false)
-        memberRepository.deleteById(id)
-        return MemberDeleteResponse(true)
+        val member: Member = memberRepository.findByIdOrNull(id) ?: return MemberDeleteResponseDto(false)
+        member.isDeleted = true
+        memberRepository.save(member)
+        return MemberDeleteResponseDto(true)
     }
 
     @Transactional
-    fun updateMember(id: Long, request: UpdateRequest): MemberUpdateResponse {
+    fun updateMember(id: Long, request: MemberUpdateRequest): MemberUpdateResponseDto {
         val member = memberRepository.findByIdOrNull(id)
             ?.takeIf { encoder.matches(request.password, it.password) }
             ?: throw IllegalArgumentException("아이디 혹은 비밀번호가 일치하지 않습니다.")
         member.update(request, encoder)
-        return MemberUpdateResponse.of(true, member)
+        return MemberUpdateResponseDto.of(true, member)
     }
 }

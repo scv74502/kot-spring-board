@@ -1,14 +1,15 @@
 package org.example.assignment.comment.entity
 
+import lombok.AccessLevel
+import lombok.NoArgsConstructor
 import org.example.assignment.article.entity.Article
 import org.example.assignment.member.entity.Member
 import org.hibernate.annotations.ColumnDefault
-import org.hibernate.annotations.DynamicInsert
 import java.time.LocalDateTime
 import javax.persistence.*
 
 
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "comment")
 class Comment (
@@ -29,12 +30,12 @@ class Comment (
     @JoinColumn(name = "article_id")
     val article: Article,   // 해당 댓글이 작성된 게시글 아이디
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "parent_id")
-//    val parent: Comment?,
-//
-//    @OneToMany(mappedBy = "parent", orphanRemoval = true)
-//    val children: MutableList<Comment> = ArrayList(),
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    val parent: Comment?,
+
+    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    val children: MutableList<Comment> = ArrayList(),
 
     @ColumnDefault("FALSE")
     var isDeleted: Boolean

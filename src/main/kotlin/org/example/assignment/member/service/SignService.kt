@@ -1,9 +1,9 @@
 package org.example.assignment.member.service
 
 import org.example.assignment.member.dto.SignInRequest
-import org.example.assignment.member.dto.SignInResponse
+import org.example.assignment.member.dto.SignInResponseDto
 import org.example.assignment.member.dto.SignUpRequest
-import org.example.assignment.member.dto.SignUpResponse
+import org.example.assignment.member.dto.SignUpResponseDto
 import org.example.assignment.member.entity.Member
 import org.example.assignment.member.entity.MemberRefreshToken
 import org.example.assignment.member.repository.MemberRefreshTokenRepository
@@ -26,7 +26,7 @@ class SignService (
     private val encoder: PasswordEncoder
 ) {
     @Transactional
-    fun registerMember(request: SignUpRequest) = SignUpResponse.from(
+    fun registerMember(request: SignUpRequest) = SignUpResponseDto.from(
         if(memberRepository.findByLoginId(request.loginId) != null){
             throw IllegalArgumentException("이미 사용중인 아이디입니다")
         } else {
@@ -35,7 +35,7 @@ class SignService (
     )
 
     @Transactional
-    fun signIn(request: SignInRequest): SignInResponse {
+    fun signIn(request: SignInRequest): SignInResponseDto {
 //        println("--------------------input values---------------------------\n ${request.toString()}")
         val member = memberRepository.findByLoginId(request.loginId)
             ?.takeIf { encoder.matches(request.password, it.password) }
@@ -45,6 +45,6 @@ class SignService (
         val refreshToken = tokenProvider.createRefreshToken()
         memberRefreshTokenRepository.findByIdOrNull(member.id)?.updateRefreshToken(refreshToken)
             ?: memberRefreshTokenRepository.save(MemberRefreshToken(member, refreshToken))
-        return SignInResponse(member.name!!, member.role, accessToken, refreshToken)
+        return SignInResponseDto(member.name!!, member.role, accessToken, refreshToken)
     }
 }

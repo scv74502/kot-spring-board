@@ -35,7 +35,7 @@ data class SignInRequest(
         val password: String
 )
 
-data class UpdateRequest(
+data class MemberUpdateRequest(
         @Schema(description = "회원 이름", example = "콜라곰")
         val name: String,
 
