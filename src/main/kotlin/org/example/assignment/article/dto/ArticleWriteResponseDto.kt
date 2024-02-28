@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 import javax.persistence.Lob
 
 
-data class WriteResponseDto(
+data class ArticleWriteResponseDto(
     @Schema(description = "게시글의 고유 번호", example = "1")
     val id: Long,
 
@@ -20,7 +20,7 @@ data class WriteResponseDto(
     val memberLoginId: String // writer of each article
 ) {
     companion object {
-        fun from(article: Article, loginId: String) = WriteResponseDto(
+        fun from(article: Article, loginId: String) = ArticleWriteResponseDto(
             id = article.id!!,
             title = article.title,
             writtenAt = article.writtenAt,

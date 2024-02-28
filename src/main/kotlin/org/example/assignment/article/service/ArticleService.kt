@@ -24,10 +24,10 @@ class ArticleService (
 
 
     @Transactional
-    fun writeArticle(writerId:Long, requestDto: WriteRequestDto): WriteResponseDto {
+    fun writeArticle(writerId:Long, requestDto: ArticleWriteRequestDto): ArticleWriteResponseDto {
         val writer:Member = memberRepository.findByIdOrNull(writerId) ?: throw IllegalArgumentException("잘못된 게시글 작성자입니다")
         println("------------------ proceeded ------------------")
-        return WriteResponseDto.from(articleRepository.save(Article.from(requestDto, writer)), writer.loginId)
+        return ArticleWriteResponseDto.from(articleRepository.save(Article.from(requestDto, writer)), writer.loginId)
     }
 
     @Transactional

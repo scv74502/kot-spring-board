@@ -2,10 +2,9 @@ package org.example.assignment.article.dto
 
 import io.swagger.annotations.ApiModelProperty
 import io.swagger.v3.oas.annotations.media.Schema
-import org.example.assignment.member.entity.Member
 import javax.persistence.Lob
 
-data class WriteRequestDto (
+data class ArticleWriteRequestDto (
     @Schema(description = "게시글의 제목", example="맥북 에어 팝니다")
     @ApiModelProperty(value = "게시글의 제목")
     val title: String,

@@ -15,8 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-// inlife function returns Logger object
-inline fun <reified T> T.logger() = LoggerFactory.getLogger(T::class.java)!!
+
 
 @Service
 class SignService (

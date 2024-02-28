@@ -33,6 +33,7 @@ class JwtAuthenticationFilter (private val tokenProvider: TokenProvider) : OnceP
         filterChain.doFilter(request, response)
     }
 
+    // accessToken 만료되어 재발급 요청 시, refreshToken 바탕으로 재발급
     private fun reissueAccessToken(request: HttpServletRequest, response: HttpServletResponse, exception: ExpiredJwtException) {
         try {
             val refreshToken = parseBearerToken(request, "Refresh-Token") ?: throw exception
@@ -47,10 +48,9 @@ class JwtAuthenticationFilter (private val tokenProvider: TokenProvider) : OnceP
         } catch (e: Exception) {
             request.setAttribute("exception", e)
         }
-
     }
 
-    // 접두어가 Bearer인지 확인하고, 접두사 이후의 글자들 파싱
+    // 접두어가 'Bearer'인지 확인하고, 접두사 이후의 글자들 파싱
     private fun parseBearerToken(request: HttpServletRequest, headerName: String) = request.getHeader(headerName)
         .takeIf { it.startsWith("Bearer", true) ?: false }?.substring(7)
 

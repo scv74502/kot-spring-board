@@ -3,6 +3,7 @@ package org.example.assignment.comment.entity
 import lombok.AccessLevel
 import lombok.NoArgsConstructor
 import org.example.assignment.article.entity.Article
+import org.example.assignment.comment.dto.CommentWriteRequestDto
 import org.example.assignment.member.entity.Member
 import org.hibernate.annotations.ColumnDefault
 import java.time.LocalDateTime
@@ -13,14 +14,13 @@ import javax.persistence.*
 @Entity
 @Table(name = "comment")
 class Comment (
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
-    val id:Long ?= null,
 
-    @Lob var content: String,
-    var liked: Int ?= 0,
-    var wrotedAt: LocalDateTime,
+    @Column(nullable = false, length = 1000)
+    var content: String,
+
+//    var liked: Int ?= 0,
+
+    var writtenAt: LocalDateTime,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -39,4 +39,20 @@ class Comment (
 
     @ColumnDefault("FALSE")
     var isDeleted: Boolean
-)
+) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_id")
+    val id:Long ?= null
+
+    companion object {
+        fun from(request:CommentWriteRequestDto, writer:Member, article: Article, parent: Comment?) = Comment(
+            content = request.content,
+            writtenAt = LocalDateTime.now(),
+            article = article,
+            member = writer,
+            parent = parent,
+            isDeleted = false
+        )
+    }
+}

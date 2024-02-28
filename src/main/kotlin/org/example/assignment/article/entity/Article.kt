@@ -1,7 +1,7 @@
 package org.example.assignment.article.entity
 
 import org.example.assignment.article.dto.ArticleUpdateRequestDto
-import org.example.assignment.article.dto.WriteRequestDto
+import org.example.assignment.article.dto.ArticleWriteRequestDto
 import org.example.assignment.comment.entity.Comment
 import org.example.assignment.member.entity.Member
 import org.example.assignment.toSlug
@@ -38,7 +38,7 @@ class Article (
     var deletedDate: LocalDateTime ?= null
 ) {
     companion object {
-        fun from(request: WriteRequestDto, writer:Member) = Article(
+        fun from(request: ArticleWriteRequestDto, writer:Member) = Article(
             title = request.title,
             writtenAt = LocalDateTime.now(),
             content = request.content,

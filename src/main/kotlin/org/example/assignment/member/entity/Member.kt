@@ -43,7 +43,7 @@ class Member (
     var role: MemberRole = MemberRole.USER,
 
     @OneToMany(mappedBy = "member")
-    @JsonIgnore
+//    @JsonIgnore
     val wroteArticles: MutableList<Article> = ArrayList<Article>(), // 사용자가 작성한 게시글 모음
 
     @OneToMany(mappedBy = "member")
