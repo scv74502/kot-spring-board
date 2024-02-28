@@ -6,6 +6,9 @@ plugins {
 	id 'org.jetbrains.kotlin.jvm' version '1.3.61'
 	id 'org.jetbrains.kotlin.plugin.spring' version '1.3.61'
 	id 'org.jetbrains.kotlin.plugin.jpa' version '1.3.61'
+	id 'org.jetbrains.kotlin.kapt' version '1.3.61'	// for querydsl, KAPT(Kotlin Annotation Processing Tool)
+	id("com.ewerk.gradle.plugins.querydsl") version "1.0.10"
+
 }
 
 allOpen {
@@ -43,14 +46,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+	implementation("javax.annotation:javax.annotation-api:1.3.2")
+	implementation("javax.persistence:javax.persistence-api:2.2")
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-kotlin
 	implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.10.1'
 	// https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa
-	implementation group: 'com.querydsl', name: 'querydsl-jpa', version: '5.1.0'
+	implementation group: 'com.querydsl', name: 'querydsl-jpa', version: '5.0.0'
 	// https://mvnrepository.com/artifact/com.querydsl/querydsl-apt
-	implementation group: 'com.querydsl', name: 'querydsl-apt', version: '5.1.0'
+	implementation group: 'com.querydsl', name: 'querydsl-apt', version: '5.0.0'
 	// https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect
 	runtimeOnly group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.1.61'
 	// JWT 사용시 필요
@@ -87,4 +92,34 @@ tasks.withType(KotlinCompile) {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+//querydsl 추가
+//def querydslDir = 'src/main/generated'
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	library = "com.querydsl:querydsl-apt"
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+//sourceSets.getByName("main") {
+//	java.srcDirs(querydslDir)
+//}
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src/main/java', querydslDir]
+		}
+	}
+}
+
+compileQuerydsl{
+	options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+	querydsl.extendsFrom compileClasspath
 }
